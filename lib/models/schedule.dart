@@ -4,7 +4,7 @@ final class Schedule {
   final String society;
   final dynamic hg;
   final dynamic fireHydrant;
-  final dynamic satudardaySector;
+  final dynamic saturdaySector;
   final String saturdayStartTime;
   final String saturdayEndTime;
   final dynamic weekdaySector;
@@ -19,7 +19,7 @@ final class Schedule {
     required this.society,
     required this.hg,
     required this.fireHydrant,
-    required this.satudardaySector,
+    required this.saturdaySector,
     required this.saturdayStartTime,
     required this.saturdayEndTime,
     required this.weekdaySector,
@@ -36,7 +36,7 @@ final class Schedule {
       society: json['society'],
       hg: json['hanegadas'],
       fireHydrant: json['fire_hydrant'],
-      satudardaySector: json['sector'],
+      saturdaySector: json['saturday_sector'],
       saturdayStartTime: json['saturday_start_time'],
       saturdayEndTime: json['saturday_end_time'],
       weekdaySector: json['weekday_sector'],
@@ -49,6 +49,6 @@ final class Schedule {
 
   @override
   String toString() {
-    return 'Schedule(area: $area, smallHolding: $smallHolding, society: $society, hg: $hg, fireHydrant: $fireHydrant, satudardaySector: $satudardaySector, saturdayStartTime: $saturdayStartTime, saturdayEndTime: $saturdayEndTime, weekdaySector: $weekdaySector, weekdayStartTime01: $weekdayStartTime01, weekdayEndTime01: $weekdayEndTime01, weekdayStartTime02: $weekdayStartTime02, weekdayEndTime02: $weekdayEndTime02)';
+    return 'Schedule(area: $area, smallHolding: $smallHolding, society: $society, hg: $hg, fireHydrant: $fireHydrant, saturdaySector: $saturdaySector, saturdayStartTime: $saturdayStartTime, saturdayEndTime: $saturdayEndTime, weekdaySector: $weekdaySector, weekdayStartTime01: $weekdayStartTime01, weekdayEndTime01: $weekdayEndTime01, weekdayStartTime02: $weekdayStartTime02, weekdayEndTime02: $weekdayEndTime02)';
   }
 }

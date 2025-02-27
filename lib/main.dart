@@ -1,4 +1,5 @@
 import 'package:el_castell_app/database/database_initializer.dart';
+import 'package:el_castell_app/providers/favourites_provider.dart';
 import 'package:el_castell_app/providers/schedule_provider.dart';
 import 'package:el_castell_app/screens/favourites_screen.dart';
 import 'package:el_castell_app/screens/schedule_screen.dart';
@@ -11,7 +12,10 @@ void main() async {
 
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => ScheduleProvider(), lazy: false)],
+      providers: [
+        ChangeNotifierProvider(create: (_) => ScheduleProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => FavouritesProvider(), lazy: false),
+      ],
       child: const MyApp(),
     ),
   );

@@ -1,4 +1,6 @@
+import 'package:el_castell_app/database/favourites_repository.dart';
 import 'package:el_castell_app/models/schedule.dart';
+import 'package:el_castell_app/providers/favourites_provider.dart';
 import 'package:el_castell_app/providers/schedule_provider.dart';
 import 'package:el_castell_app/screens/info_screen.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ class ScheduleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ScheduleProvider>(context);
+    final providerFavourites = Provider.of<FavouritesProvider>(context);
 
     if (provider.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -43,7 +46,7 @@ class ScheduleScreen extends StatelessWidget {
                 onPressed: () {
                   String inputText = _controller.text;
                   Navigator.pop(context, inputText);
-                  print('Texto ingresado: $inputText');
+                  providerFavourites.addFavourite(schedule.area, schedule.smallHolding, inputText);
                 },
                 child: Text('Aceptar'),
               ),
@@ -61,7 +64,10 @@ class ScheduleScreen extends StatelessWidget {
                   title: Text('Polígono ${e.area.toString()}'),
                   subtitle: Text('Parcela ${e.smallHolding.toString()}'),
                   trailing: IconButton(
-                    icon: Icon(Icons.favorite_border),
+                    icon: Icon(
+                      providerFavourites.isFavourite(e) ? Icons.favorite : Icons.favorite_border,
+                      color: Colors.red,
+                    ),
                     onPressed: () => showInputDialog(e),
                   ),
                   onTap: () => onTap(e),

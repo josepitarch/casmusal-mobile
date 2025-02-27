@@ -1,6 +1,6 @@
 import 'package:el_castell_app/database/database_initializer.dart';
 
-Future<bool> save(int area, String smallHolding, String name) async {
+Future<bool> save(int area, dynamic smallHolding, String name) async {
   final database = await DatabaseInitializer.instance.database;
 
   return database
