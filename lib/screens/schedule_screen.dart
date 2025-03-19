@@ -1,79 +1,123 @@
-import 'package:el_castell_app/database/favourites_repository.dart';
+import 'package:el_castell_app/dialogs/create_favourite.dart';
 import 'package:el_castell_app/models/schedule.dart';
 import 'package:el_castell_app/providers/favourites_provider.dart';
 import 'package:el_castell_app/providers/schedule_provider.dart';
-import 'package:el_castell_app/screens/info_screen.dart';
+import 'package:el_castell_app/widgets/info_card.dart';
+import 'package:el_castell_app/widgets/search_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ScheduleScreen extends StatelessWidget {
+class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
+  @override
+  ScheduleScreenState createState() => ScheduleScreenState();
+}
+
+class ScheduleScreenState extends State<ScheduleScreen> {
+  Schedule? schedule;
+  bool searched = false;
+
+  @override
+  void initState() {
+    final form = context.read<ScheduleProvider>().form;
+    if (form['area'] != null && form['smallholding'] != null) {
+      schedule = context.read<ScheduleProvider>().getScheduleByAreaAndSmallHolding(
+        int.parse(form['area']!),
+        form['smallholding'],
+      );
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ScheduleProvider>(context);
-    final providerFavourites = Provider.of<FavouritesProvider>(context);
+    final favouritesProvider = Provider.of<FavouritesProvider>(context);
 
     if (provider.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    onTap(Schedule schedule) => showModalBottomSheet(
-      context: context,
-      builder:
-          (_) => FractionallySizedBox(
-            widthFactor: 1,
-            heightFactor: 1,
-            child: InfoScreen(schedule: schedule),
-          ),
-    );
+    void updateState(int area, String smallholding) {
+      setState(() {
+        schedule = provider.getScheduleByAreaAndSmallHolding(area, smallholding);
+        searched = true;
+        provider.form['area'] = area.toString();
+        provider.form['smallholding'] = smallholding;
+      });
+    }
 
-    void showInputDialog(Schedule schedule) {
-      TextEditingController _controller = TextEditingController();
-
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Ingrese un texto'),
-            content: TextField(
-              controller: _controller,
-              decoration: InputDecoration(hintText: 'Escribe aquí...'),
-            ),
-            actions: [
-              TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancelar')),
-              TextButton(
-                onPressed: () {
-                  String inputText = _controller.text;
-                  Navigator.pop(context, inputText);
-                  providerFavourites.addFavourite(schedule.area, schedule.smallHolding, inputText);
-                },
-                child: Text('Aceptar'),
-              ),
-            ],
-          );
-        },
+    if (schedule == null && !searched) {
+      return SafeArea(
+        child: Column(
+          spacing: 20,
+          children: [SearchForm(areas: provider.getAllAreas(), callback: updateState)],
+        ),
       );
     }
 
-    return ListView(
-      children:
-          provider.schedule
-              .map(
-                (e) => ListTile(
-                  title: Text('Polígono ${e.area.toString()}'),
-                  subtitle: Text('Parcela ${e.smallHolding.toString()}'),
-                  trailing: IconButton(
-                    icon: Icon(
-                      providerFavourites.isFavourite(e) ? Icons.favorite : Icons.favorite_border,
-                      color: Colors.red,
-                    ),
-                    onPressed: () => showInputDialog(e),
-                  ),
-                  onTap: () => onTap(e),
+    if (schedule == null && searched) {
+      return SafeArea(
+        child: Column(
+          spacing: 20,
+          children: [
+            SearchForm(areas: provider.getAllAreas(), callback: updateState),
+            Flexible(
+              flex: 1,
+              child: Center(
+                child: Text(
+                  'No se encontraron resultados',
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
-              )
-              .toList(),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    bool isFavourite = favouritesProvider.isFavourite(schedule!);
+
+    return SafeArea(
+      child: Column(
+        spacing: 20,
+        children: [
+          SearchForm(areas: provider.getAllAreas(), callback: updateState),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  spacing: 20,
+                  children: [
+                    InfoCard(schedule: schedule!),
+                    if (!isFavourite)
+                      ElevatedButton(
+                        child: Text('Agregar a favoritos'),
+                        onPressed:
+                            () => showDialog(
+                              context: context,
+                              builder: (context) {
+                                return CreateFavouriteDialog();
+                              },
+                            ).then((value) {
+                              if (value['title'] != null) {
+                                favouritesProvider.addFavourite(
+                                  schedule!.area,
+                                  schedule!.smallholding,
+                                  value['title'],
+                                );
+                              }
+                            }),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

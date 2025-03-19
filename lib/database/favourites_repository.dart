@@ -1,6 +1,6 @@
 import 'package:el_castell_app/database/database_initializer.dart';
 
-Future<bool> save(int area, dynamic smallHolding, String name) async {
+Future<bool> save(String area, dynamic smallHolding, String name) async {
   final database = await DatabaseInitializer.instance.database;
 
   return database
@@ -14,10 +14,14 @@ Future<List<Map<String, dynamic>>> getFavourites() async {
   return database.query('favourites');
 }
 
-Future<bool> delete(int area, String smallHolding) async {
+Future<bool> delete(String area, dynamic smallHolding) async {
   final database = await DatabaseInitializer.instance.database;
 
   return database
-      .delete('favourites', where: 'area = ? AND smallHolding = ?', whereArgs: [area, smallHolding])
+      .delete(
+        'favourites',
+        where: 'area = ? AND smallHolding = ?',
+        whereArgs: [area.toString(), smallHolding.toString()],
+      )
       .then((value) => value > 0);
 }

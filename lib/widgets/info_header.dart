@@ -13,7 +13,10 @@ final class InfoHeader extends StatelessWidget {
             : BorderRadius.only(topRight: Radius.circular(20), bottomLeft: Radius.circular(20));
     return Container(
       padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(color: Colors.blue, borderRadius: borderRadius),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
+        borderRadius: borderRadius,
+      ),
       child: Text(text, style: Theme.of(context).textTheme.headlineMedium),
     );
   }
