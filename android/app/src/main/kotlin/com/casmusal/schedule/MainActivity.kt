@@ -1,4 +1,4 @@
-package com.example.el_castell_app
+package com.casmusal.schedule
 
 import io.flutter.embedding.android.FlutterActivity
 

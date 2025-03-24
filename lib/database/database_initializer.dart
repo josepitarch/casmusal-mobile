@@ -18,7 +18,7 @@ class DatabaseInitializer {
 
   Future<Database> _initDatabase() async {
     final path = await getDatabasesPath();
-    final databasePath = join(path, 'el_castell.db');
+    final databasePath = join(path, 'casmusal.db');
 
     return await openDatabase(
       databasePath,
