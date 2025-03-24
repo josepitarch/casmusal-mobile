@@ -61,7 +61,7 @@ class FavouritesScreen extends StatelessWidget {
       itemCount: provider.favourites.length,
       itemBuilder: (context, index) {
         final Schedule? schedule = providerSchedule.getScheduleByAreaAndSmallHolding(
-          int.parse(provider.favourites[index]['area']),
+          provider.favourites[index]['area'],
           provider.favourites[index]['smallholding'],
         );
 

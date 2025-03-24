@@ -28,7 +28,7 @@ final class ScheduleProvider extends ChangeNotifier {
     });
   }
 
-  Schedule? getScheduleByAreaAndSmallHolding(int area, dynamic smallHolding) {
+  Schedule? getScheduleByAreaAndSmallHolding(String area, dynamic smallHolding) {
     try {
       return schedule.firstWhere(
         (element) =>
@@ -40,8 +40,19 @@ final class ScheduleProvider extends ChangeNotifier {
     }
   }
 
-  List<int> getAllAreas() {
-    return schedule.map((e) => int.parse(e.area.toString())).toSet().toList()..sort();
+  List<String> getAllAreas() {
+    final a = schedule.map((e) => e.area).toSet().toList();
+    a.sort((a, b) {
+      final aNumber = int.tryParse(a);
+      final bNumber = int.tryParse(b);
+
+      if (aNumber == null) return 1;
+      if (bNumber == null) return 1;
+
+      return aNumber.compareTo(bNumber);
+    });
+
+    return a;
   }
 
   Set<String> getAllSocietys() {

@@ -22,7 +22,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     final form = context.read<ScheduleProvider>().form;
     if (form['area'] != null && form['smallholding'] != null) {
       schedule = context.read<ScheduleProvider>().getScheduleByAreaAndSmallHolding(
-        int.parse(form['area']!),
+        form['area']!,
         form['smallholding'],
       );
     }
@@ -39,11 +39,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    void updateState(int area, String smallholding) {
+    void updateState(String area, String smallholding) {
       setState(() {
         schedule = provider.getScheduleByAreaAndSmallHolding(area, smallholding);
         searched = true;
-        provider.form['area'] = area.toString();
+        provider.form['area'] = area;
         provider.form['smallholding'] = smallholding;
       });
     }

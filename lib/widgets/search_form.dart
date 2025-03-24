@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SearchForm extends StatefulWidget {
-  final List<int> areas;
-  final Function(int, String) callback;
+  final List<String> areas;
+  final Function(String, String) callback;
   const SearchForm({required this.areas, required this.callback, super.key});
 
   @override
@@ -48,11 +48,8 @@ class _SearchFormState extends State<SearchForm> {
               ),
               value: area,
               items:
-                  widget.areas.map((int item) {
-                    return DropdownMenuItem<String>(
-                      value: item.toString(),
-                      child: Text('Polígono ${item.toString()}'),
-                    );
+                  widget.areas.map((String item) {
+                    return DropdownMenuItem<String>(value: item, child: Text('Polígono $item'));
                   }).toList(),
               onChanged: (String? newValue) {
                 setState(() {
@@ -82,7 +79,7 @@ class _SearchFormState extends State<SearchForm> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   FocusScope.of(context).unfocus();
-                  widget.callback(int.parse(area!), smallholding!);
+                  widget.callback(area!, smallholding!);
                 }
               },
 
