@@ -3,8 +3,6 @@ import 'package:el_castell_app/providers/favourites_provider.dart';
 import 'package:el_castell_app/providers/schedule_provider.dart';
 import 'package:el_castell_app/screens/favourites_screen.dart';
 import 'package:el_castell_app/screens/schedule_screen.dart';
-import 'package:el_castell_app/screens/search_delegate.dart';
-import 'package:el_castell_app/widgets/info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,12 +27,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'El Castell',
+      title: 'Casmusal',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Color.fromRGBO(137, 172, 70, 1),
           primary: Color.fromRGBO(137, 172, 70, 1),
-          secondary: Color.fromRGBO(248, 237, 140, 1),
+          secondary: Color.fromRGBO(238, 228, 142, 1),
         ),
 
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -58,13 +56,26 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
-
   final List<Widget> _screens = [ScheduleScreen(), FavouritesScreen()];
+  DateTime lastApiRequest = DateTime.now();
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    AppLifecycleListener(
+      onResume: () {
+        if (DateTime.now().difference(lastApiRequest).inDays >= 7) {
+          lastApiRequest = DateTime.now();
+          context.read<ScheduleProvider>().onRefresh();
+        }
+      },
+    );
   }
 
   @override

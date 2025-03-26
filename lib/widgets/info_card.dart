@@ -39,7 +39,7 @@ class InfoCard extends StatelessWidget {
                   saturdayStartTime: schedule.saturdayStartTime,
                   saturdayEndTime: schedule.saturdayEndTime,
                 ),
-                Divider(height: 1),
+                Divider(height: 1, thickness: 2),
                 WeekdaySector(
                   weekdaySector: schedule.weekdaySector,
                   weekdayStartTime01: schedule.weekdayStartTime01,
@@ -47,7 +47,7 @@ class InfoCard extends StatelessWidget {
                   weekdayStartTime02: schedule.weekdayStartTime02,
                   weekdayEndTime02: schedule.weekdayEndTime02,
                 ),
-                Divider(height: 1),
+                Divider(height: 1, thickness: 2),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
